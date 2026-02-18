@@ -1,0 +1,8 @@
+{
+  "name": "EduCRM Pro",
+  "description": "A high-end educational CRM management system featuring student lifecycle tracking, task automation, and AI-powered follow-up suggestions.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
