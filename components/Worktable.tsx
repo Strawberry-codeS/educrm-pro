@@ -5,11 +5,12 @@ import { metricService } from '../services/metricService';
 
 interface WorktableProps {
   onNavigate: (view: ViewType, student?: Student) => void;
+  refreshKey?: number;
 }
 
 type FilterType = 'new' | 'followup' | 'visit';
 
-const Worktable: React.FC<WorktableProps> = ({ onNavigate }) => {
+const Worktable: React.FC<WorktableProps> = ({ onNavigate, refreshKey = 0 }) => {
   const [activeFilter, setActiveFilter] = useState<FilterType>('new');
   const [students, setStudents] = useState<Student[]>([]);
   const [metrics, setMetrics] = useState<Metric[]>([]);
@@ -18,6 +19,7 @@ const Worktable: React.FC<WorktableProps> = ({ onNavigate }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(true);
         const [studentsData, metricsData] = await Promise.all([
           studentService.getStudents(),
           metricService.getMetrics()
@@ -31,7 +33,7 @@ const Worktable: React.FC<WorktableProps> = ({ onNavigate }) => {
       }
     };
     fetchData();
-  }, []);
+  }, [refreshKey]);
 
   const filteredStudents = students.filter(s => s.category === activeFilter);
 

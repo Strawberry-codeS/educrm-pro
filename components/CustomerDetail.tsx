@@ -10,7 +10,7 @@ interface CustomerDetailProps {
 
 const CustomerDetail: React.FC<CustomerDetailProps> = ({ student, onBack, onEdit }) => {
   return (
-    <div className="min-h-screen bg-background-light">
+    <div className="min-h-screen bg-background-light relative">
       <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md px-4 py-3 flex items-center justify-between border-b border-slate-100">
         <button onClick={onBack} className="p-1"><span className="material-icons-round">chevron_left</span></button>
         <h1 className="text-lg font-bold">客户详情</h1>
@@ -30,10 +30,10 @@ const CustomerDetail: React.FC<CustomerDetailProps> = ({ student, onBack, onEdit
           <div className="flex justify-between items-start mb-4">
             <div className="flex gap-4">
               <div className="relative">
-                <img 
-                  alt="Avatar" 
-                  className="w-16 h-16 rounded-full bg-teal-100 object-cover" 
-                  src={student.avatar || "https://picsum.photos/200/200"} 
+                <img
+                  alt="Avatar"
+                  className="w-16 h-16 rounded-full bg-teal-100 object-cover"
+                  src={student.avatar || "https://picsum.photos/200/200"}
                 />
                 <div className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 border-2 border-white rounded-full"></div>
               </div>
@@ -50,7 +50,7 @@ const CustomerDetail: React.FC<CustomerDetailProps> = ({ student, onBack, onEdit
                 </div>
               </div>
             </div>
-            <button 
+            <button
               onClick={onEdit}
               className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white shadow-lg shadow-primary/30"
             >
@@ -59,19 +59,19 @@ const CustomerDetail: React.FC<CustomerDetailProps> = ({ student, onBack, onEdit
           </div>
 
           <div className="space-y-3 mb-6">
-             <div className="flex justify-between items-end px-1">
-                <span className="text-[10px] text-slate-400 font-bold uppercase">Lead</span>
-                <span className="text-[10px] text-slate-400 font-bold uppercase">Opportunity</span>
+            <div className="flex justify-between items-end px-1">
+              <span className="text-[10px] text-slate-400 font-bold uppercase">Lead</span>
+              <span className="text-[10px] text-slate-400 font-bold uppercase">Opportunity</span>
+            </div>
+            <div className="flex overflow-hidden rounded-full w-full h-8 items-center text-[10px] font-bold bg-slate-100">
+              <div className="flex-1 h-full flex items-center justify-center bg-[#FDE68A] text-amber-800 border-r border-white/40">接触阶段</div>
+              <div className="flex-1 h-full flex items-center justify-center bg-primary text-white border-r border-white/40 relative">
+                邀约DEMO
+                <div className="absolute -top-1 right-1/2 translate-x-1/2 w-1.5 h-1.5 bg-white rounded-full shadow-sm"></div>
               </div>
-              <div className="flex overflow-hidden rounded-full w-full h-8 items-center text-[10px] font-bold bg-slate-100">
-                <div className="flex-1 h-full flex items-center justify-center bg-[#FDE68A] text-amber-800 border-r border-white/40">接触阶段</div>
-                <div className="flex-1 h-full flex items-center justify-center bg-primary text-white border-r border-white/40 relative">
-                  邀约DEMO
-                  <div className="absolute -top-1 right-1/2 translate-x-1/2 w-1.5 h-1.5 bg-white rounded-full shadow-sm"></div>
-                </div>
-                <div className="flex-1 h-full flex items-center justify-center bg-primary/40 text-white/90 border-r border-white/40">已到访</div>
-                <div className="flex-1 h-full flex items-center justify-center bg-primary/40 text-white/90">正式报名</div>
-              </div>
+              <div className="flex-1 h-full flex items-center justify-center bg-primary/40 text-white/90 border-r border-white/40">已到访</div>
+              <div className="flex-1 h-full flex items-center justify-center bg-primary/40 text-white/90">正式报名</div>
+            </div>
           </div>
 
           <div className="bg-orange-50/50 p-3 rounded-xl border border-orange-100 flex items-center justify-between">
@@ -139,7 +139,7 @@ const CustomerDetail: React.FC<CustomerDetailProps> = ({ student, onBack, onEdit
         </section>
       </main>
 
-      <button className="fixed right-6 bottom-24 bg-gradient-to-r from-pink-400 to-primary text-white px-5 py-3 rounded-full shadow-xl shadow-primary/30 flex items-center gap-2 font-bold text-sm z-50">
+      <button className="absolute right-6 bottom-24 bg-gradient-to-r from-pink-400 to-primary text-white px-5 py-3 rounded-full shadow-xl shadow-primary/30 flex items-center gap-2 font-bold text-sm z-50">
         <span className="material-icons-round text-sm">auto_fix_high</span>
         话术推荐
       </button>

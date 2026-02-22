@@ -35,6 +35,17 @@ export const studentService = {
         return data as Student;
     },
 
+    async createStudent(data: Omit<Student, 'id'>) {
+        const { data: created, error } = await supabase
+            .from('students')
+            .insert([data])
+            .select()
+            .single();
+
+        if (error) throw error;
+        return created as Student;
+    },
+
     async updateStudent(id: string, updates: Partial<Student>) {
         const { data, error } = await supabase
             .from('students')

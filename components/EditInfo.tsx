@@ -1,18 +1,40 @@
 
 import React, { useState } from 'react';
 import { Student } from '../types';
+import { studentService } from '../services/studentService';
 
 interface EditInfoProps {
   student: Student;
   onBack: () => void;
+  onSaved?: () => void;
 }
 
-const EditInfo: React.FC<EditInfoProps> = ({ student, onBack }) => {
+const EditInfo: React.FC<EditInfoProps> = ({ student, onBack, onSaved }) => {
+  const [saving, setSaving] = useState(false);
   const [activeChild, setActiveChild] = useState(0);
   const [selectedStage, setSelectedStage] = useState('已上门未缴费');
   const [selectedLevel, setSelectedLevel] = useState('A');
   const [isImportant, setIsImportant] = useState(true);
   const [concerns, setConcerns] = useState(['服务质量']);
+
+  const handleSave = async () => {
+    try {
+      setSaving(true);
+      await studentService.updateStudent(student.id, {
+        status: selectedStage,
+        tags: isImportant
+          ? Array.from(new Set([...student.tags.filter(t => t !== '重点单'), '重点单']))
+          : student.tags.filter(t => t !== '重点单'),
+      });
+      onSaved?.();
+      onBack();
+    } catch (err) {
+      console.error('保存失败:', err);
+      alert('保存失败，请重试');
+    } finally {
+      setSaving(false);
+    }
+  };
 
   const children = [
     { name: '陈杰森', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Jason' },
@@ -29,7 +51,7 @@ const EditInfo: React.FC<EditInfoProps> = ({ student, onBack }) => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F6FA] flex flex-col">
+    <div className="min-h-screen bg-[#F5F6FA] flex flex-col relative">
       {/* Call Header Overlay */}
       <div className="bg-primary h-12 flex items-center justify-between px-6 text-white sticky top-0 z-50">
         <div className="flex items-center gap-2">
@@ -55,11 +77,10 @@ const EditInfo: React.FC<EditInfoProps> = ({ student, onBack }) => {
             <button
               key={i}
               onClick={() => setActiveChild(i)}
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all whitespace-nowrap ${
-                activeChild === i 
-                ? 'bg-[#EEF2FF] border-primary text-primary shadow-sm' 
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all whitespace-nowrap ${activeChild === i
+                ? 'bg-[#EEF2FF] border-primary text-primary shadow-sm'
                 : 'bg-white border-slate-100 text-slate-500'
-              }`}
+                }`}
             >
               <img src={child.avatar} alt={child.name} className="w-6 h-6 rounded-full bg-slate-100" />
               <span className="text-sm font-bold">{child.name}</span>
@@ -199,11 +220,10 @@ const EditInfo: React.FC<EditInfoProps> = ({ student, onBack }) => {
                 <button
                   key={s}
                   onClick={() => setSelectedStage(s)}
-                  className={`py-2.5 px-1 text-[11px] font-bold rounded-xl border transition-all ${
-                    selectedStage === s 
-                    ? 'bg-primary text-white border-primary shadow-md shadow-primary/20' 
+                  className={`py-2.5 px-1 text-[11px] font-bold rounded-xl border transition-all ${selectedStage === s
+                    ? 'bg-primary text-white border-primary shadow-md shadow-primary/20'
                     : 'bg-white border-slate-100 text-slate-400 hover:border-slate-200'
-                  }`}
+                    }`}
                 >
                   {s}
                 </button>
@@ -222,11 +242,10 @@ const EditInfo: React.FC<EditInfoProps> = ({ student, onBack }) => {
                 <button
                   key={l}
                   onClick={() => setSelectedLevel(l)}
-                  className={`flex-1 py-3.5 text-lg font-black rounded-2xl border transition-all ${
-                    selectedLevel === l 
-                    ? 'bg-[#EEF2FF] border-primary text-primary shadow-inner' 
+                  className={`flex-1 py-3.5 text-lg font-black rounded-2xl border transition-all ${selectedLevel === l
+                    ? 'bg-[#EEF2FF] border-primary text-primary shadow-inner'
                     : 'bg-white border-slate-100 text-slate-300'
-                  }`}
+                    }`}
                 >
                   {l}
                 </button>
@@ -245,11 +264,10 @@ const EditInfo: React.FC<EditInfoProps> = ({ student, onBack }) => {
                 <button
                   key={v.toString()}
                   onClick={() => setIsImportant(v)}
-                  className={`flex-1 py-3.5 text-base font-bold rounded-2xl border transition-all ${
-                    isImportant === v 
-                    ? 'bg-[#EEF2FF] border-primary text-primary shadow-inner' 
+                  className={`flex-1 py-3.5 text-base font-bold rounded-2xl border transition-all ${isImportant === v
+                    ? 'bg-[#EEF2FF] border-primary text-primary shadow-inner'
                     : 'bg-white border-slate-100 text-slate-400'
-                  }`}
+                    }`}
                 >
                   {v ? '是' : '否'}
                 </button>
@@ -268,11 +286,10 @@ const EditInfo: React.FC<EditInfoProps> = ({ student, onBack }) => {
                 <button
                   key={c}
                   onClick={() => toggleConcern(c)}
-                  className={`px-5 py-2.5 text-sm font-bold rounded-full border transition-all ${
-                    concerns.includes(c) 
-                    ? 'bg-[#EEF2FF] border-primary text-primary' 
+                  className={`px-5 py-2.5 text-sm font-bold rounded-full border transition-all ${concerns.includes(c)
+                    ? 'bg-[#EEF2FF] border-primary text-primary'
                     : 'bg-white border-slate-100 text-slate-500'
-                  }`}
+                    }`}
                 >
                   {c}
                 </button>
@@ -299,10 +316,10 @@ const EditInfo: React.FC<EditInfoProps> = ({ student, onBack }) => {
       </main>
 
       {/* Footer Actions */}
-      <div className="fixed bottom-0 left-0 right-0 p-5 bg-white flex items-center gap-4 border-t border-slate-100 z-50">
-        <button onClick={onBack} className="flex-1 py-4 text-slate-900 font-bold text-lg">取消</button>
-        <button onClick={onBack} className="flex-[2] py-4 bg-gradient-to-r from-primary to-[#9778FF] text-white rounded-2xl font-bold text-lg shadow-xl shadow-primary/40 active:scale-95 transition-transform">
-          保存并完成
+      <div className="absolute bottom-0 left-0 right-0 p-5 bg-white flex items-center gap-4 border-t border-slate-100 z-50">
+        <button onClick={onBack} disabled={saving} className="flex-1 py-4 text-slate-900 font-bold text-lg">取消</button>
+        <button onClick={handleSave} disabled={saving} className="flex-[2] py-4 bg-gradient-to-r from-primary to-[#9778FF] text-white rounded-2xl font-bold text-lg shadow-xl shadow-primary/40 active:scale-95 transition-transform disabled:opacity-60">
+          {saving ? '保存中...' : '保存并完成'}
         </button>
       </div>
     </div>
